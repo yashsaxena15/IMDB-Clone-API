@@ -1,223 +1,188 @@
-🎬 IMDb Clone – Backend REST API 
+# 🎬 IMDb Clone – Backend REST API
 
-This project is a backend REST API for an IMDb-like movie review platform, built using Django and Django REST Framework (DRF).
-It focuses on authentication, database relationships, business logic, and API design, without a frontend.
+This project is a **backend REST API** for an IMDb-like movie review platform, built using **Django** and **Django REST Framework (DRF)**.  
+It focuses on **authentication, database relationships, business logic, and API design**, without a frontend.
 
-The API can be consumed by any frontend (React, mobile apps, etc.) or tested using tools like Postman.
+The API can be consumed by any frontend (React, mobile apps, etc.) or tested using tools like **Postman**.
 
-🚀 Features
+---
 
-User authentication using Token-based Authentication
+## 🚀 Features
 
-CRUD APIs for:
+- User authentication using **Token-based Authentication**
+- CRUD APIs for:
+  - Streaming Platforms
+  - Watchlists (Movies)
+  - Reviews
+- One-to-many and many-to-one database relationships
+- Users can review a movie **only once**
+- Dynamic calculation of average movie ratings
+- Role-based access control:
+  - Admins can manage platforms and movies
+  - Users can create/update their own reviews
+- API throttling to prevent abuse
+- Pagination for large datasets
+- Filtering and ordering support
 
-Streaming Platforms
+---
 
-Watchlists (Movies)
+## 🛠 Tech Stack
 
-Reviews
+- **Python**
+- **Django**
+- **Django REST Framework**
+- **MySQL**
+- **DRF Token Authentication**
 
-One-to-many and many-to-one database relationships
+---
 
-Users can review a movie only once
+## 📂 Database Models
 
-Dynamic calculation of average movie ratings
-
-Role-based access control:
-
-Admins can manage platforms and movies
-
-Users can create/update their own reviews
-
-API throttling to prevent abuse
-
-Pagination for large datasets
-
-Filtering and ordering support
-
-🛠 Tech Stack
-
-Python
-
-Django
-
-Django REST Framework
-
-MySQL
-
-DRF Token Authentication
-
-📂 Database Models
-StreamPlatform
-
+### StreamPlatform
 Represents streaming platforms like Netflix, Prime Video, etc.
 
-Name
+- Name
+- Description
+- Website
 
-Description
+---
 
-Website
-
-WatchList
-
+### WatchList
 Represents movies or shows available on a platform.
 
-Title
+- Title
+- Storyline
+- Platform (Foreign Key)
+- Active status
+- Average rating
+- Number of ratings
+- Created timestamp
 
-Storyline
+---
 
-Platform (Foreign Key)
-
-Active status
-
-Average rating
-
-Number of ratings
-
-Created timestamp
-
-Review
-
+### Review
 Represents user reviews for movies.
 
-User (Foreign Key)
+- User (Foreign Key)
+- Movie (Foreign Key)
+- Rating (1–5)
+- Review description
+- Created & updated timestamps
 
-Movie (Foreign Key)
+---
 
-Rating (1–5)
+## 🔐 Authentication & Permissions
 
-Review description
+- Token-based authentication using **DRF Authtoken**
+- Only authenticated users can create reviews
+- Custom permission classes:
+  - **IsAdminOrReadOnly** – Admins can modify, others can only read
+  - **IsReviewUserOrReadOnly** – Users can update/delete only their own reviews
 
-Created & updated timestamps
+---
 
-🔐 Authentication & Permissions
+## 📌 API Endpoints (Sample)
 
-Token-based authentication using DRF Authtoken
+### Authentication
+- `POST /account/register/` – User registration
+- `POST /account/login/` – Get auth token
+- `POST /account/logout/` – Logout user
 
-Only authenticated users can create reviews
+---
 
-Custom permission classes:
+### Platforms & Movies
+- `GET /watch/platformlist/` – List streaming platforms
+- `GET /watch/watchlist/` – List movies
+- `GET /watch/watchlist/<id>/` – Movie details
 
-IsAdminOrReadOnly – Admins can modify, others can only read
+---
 
-IsReviewUserOrReadOnly – Users can update/delete only their own reviews
+### Reviews
+- `POST /watch/<movie_id>/review-create/` – Create a review
+- `GET /watch/<movie_id>/review/` – List reviews for a movie
+- `PUT /watch/review/<id>/` – Update a review
+- `DELETE /watch/review/<id>/` – Delete a review
 
-📌 API Endpoints (Sample)
-Authentication
+---
 
-POST /account/register/ – User registration
+## ⚙️ Advanced DRF Features Used
 
-POST /account/login/ – Get auth token
+- Generic class-based views
+- ModelViewSets & Routers
+- Custom permissions
+- Throttling (Anon & User based)
+- Pagination
+- Filtering and ordering
+- Nested serializers
 
-POST /account/logout/ – Logout user
+---
 
-Platforms & Movies
+## 🧠 Business Logic Highlights
 
-GET /watch/platformlist/ – List streaming platforms
+- Prevents duplicate reviews by the same user for a movie
+- Automatically updates movie rating statistics
+- Enforces role-based API access
+- Clean separation of concerns using serializers and views
 
-GET /watch/watchlist/ – List movies
+---
 
-GET /watch/watchlist/<id>/ – Movie details
+## ▶️ How to Run Locally
 
-Reviews
-
-POST /watch/<movie_id>/review-create/ – Create a review
-
-GET /watch/<movie_id>/review/ – List reviews for a movie
-
-PUT /watch/review/<id>/ – Update a review
-
-DELETE /watch/review/<id>/ – Delete a review
-
-⚙️ Advanced DRF Features Used
-
-Generic class-based views
-
-ModelViewSets & Routers
-
-Custom permissions
-
-Throttling (Anon & User based)
-
-Pagination
-
-Filtering and ordering
-
-Nested serializers
-
-🧠 Business Logic Highlights
-
-Prevents duplicate reviews by the same user for a movie
-
-Automatically updates movie rating statistics
-
-Enforces role-based API access
-
-Clean separation of concerns using serializers and views
-
-▶️ How to Run Locally
-
-Clone the repository
+### 1️⃣ Clone the repository
 
 git clone <your-repo-url>
-
-
-Create and activate virtual environment
+### 2️⃣ Create and activate virtual environment
 
 python -m venv env
 source env/bin/activate
-
-
-Install dependencies
+### 3️⃣ Install dependencies
 
 pip install -r requirements.txt
+### 4️⃣ Configure MySQL database
+Update database credentials in settings.py.
 
-
-Configure MySQL database in settings.py
-
-Run migrations
+### 5️⃣ Run migrations
 
 python manage.py makemigrations
 python manage.py migrate
-
-
-Start the server
+### 6️⃣ Start the server
 
 python manage.py runserver
 
-🧪 Testing the API
+## 🧪 Testing the API
 
-You can test all endpoints using:
+- You can test all endpoints using:
 
-Postman
+- Postman
 
-cURL
+- cURL
 
-Any frontend client
+- Any frontend client
 
 All responses are returned in JSON format.
 
-📌 Notes
+## 📌 Notes
 
-This project focuses only on backend functionality.
+- This project focuses only on backend functionality.
 
-Frontend and deployment are not included.
+- Frontend and deployment are not included.
 
-Designed primarily for learning and backend interview preparation.
+- Designed primarily for learning and backend interview preparation.
 
-✨ Future Improvements
+## ✨ Future Improvements
 
-Improve rating calculation using weighted averages
+- Improve rating calculation using weighted averages
 
-Add JWT authentication
+- Add JWT authentication
 
-Add search APIs
+- Add search APIs
 
-Deploy on cloud (AWS / Render / Railway)
+- Deploy on cloud (AWS / Render / Railway)
 
-Add frontend client
+- Add frontend client
 
-👤 Author
+## 👤 Author
 
 Yash Saxena
 Backend Developer | Python | Django REST Framework
+
